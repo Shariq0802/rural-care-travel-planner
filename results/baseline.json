@@ -1,0 +1,496 @@
+{
+  "title": "Baseline (regular expressions)",
+  "summary": {
+    "date": {
+      "correct": 16,
+      "total": 20,
+      "accuracy": 0.8,
+      "made_up": 1
+    },
+    "time": {
+      "correct": 17,
+      "total": 20,
+      "accuracy": 0.85,
+      "made_up": 0
+    },
+    "clinic": {
+      "correct": 18,
+      "total": 20,
+      "accuracy": 0.9,
+      "made_up": 0
+    },
+    "address": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0,
+      "made_up": 0
+    },
+    "all_fields": {
+      "correct": 12,
+      "total": 20,
+      "accuracy": 0.6
+    }
+  },
+  "rows": [
+    {
+      "id": 1,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-11-24",
+        "time": "10:30",
+        "clinic": "Dunmore Community Hospital",
+        "address": "Harbour Road, Dunmore, PA99 1AB"
+      },
+      "predicted": {
+        "date": "2026-11-02",
+        "time": "10:30",
+        "clinic": "Ophthalmology Outpatients Dunmore Community Hospital",
+        "address": "Ophthalmology Outpatients, Dunmore Community Hospital, Harbour Road, Dunmore, PA99 1AB"
+      },
+      "warnings": [],
+      "correct": {
+        "date": false,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 2,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-11-12",
+        "time": "14:40",
+        "clinic": "Glenview Medical Practice",
+        "address": "4 Mill Lane, Glenview, KY99 2CD"
+      },
+      "predicted": {
+        "date": "2026-11-12",
+        "time": "14:40",
+        "clinic": "Glenview Medical Practice",
+        "address": "4 Mill Lane, Glenview, KY99 2CD"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 3,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-01",
+        "time": "09:15",
+        "clinic": "Strathmore Health Centre",
+        "address": "Bridge Street, Strathmore, DD99 4EF"
+      },
+      "predicted": {
+        "date": "2026-12-01",
+        "time": "09:15",
+        "clinic": "Strathmore Health Centre",
+        "address": "Strathmore Health Centre, Bridge Street, Strathmore, DD99 4EF"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 4,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-11-17",
+        "time": "11:00",
+        "clinic": "Ardgour General Hospital",
+        "address": "Station Road, Ardgour, PH99 7GH"
+      },
+      "predicted": {
+        "date": "2026-11-10",
+        "time": "14:00",
+        "clinic": "Ardgour General Hospital",
+        "address": "Station Road, Ardgour, PH99 7GH"
+      },
+      "warnings": [],
+      "correct": {
+        "date": false,
+        "time": false,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 5,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-11-19",
+        "time": "15:20",
+        "clinic": "Rowan Surgery",
+        "address": "12 Church Square, Kinloch, IV99 5JK"
+      },
+      "predicted": {
+        "date": "2026-11-03",
+        "time": "15:20",
+        "clinic": "Rowan Surgery",
+        "address": "ursday 19 November 2026 at 3:20 pm at Rowan Surgery, 12 Church Square, Kinloch, IV99 5JK"
+      },
+      "warnings": [],
+      "correct": {
+        "date": false,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 6,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-11-23",
+        "time": "13:30",
+        "clinic": "Birchwood Dental Practice",
+        "address": "8 High Street, Birchwood, G99 3KL"
+      },
+      "predicted": {
+        "date": "2026-11-23",
+        "time": "13:30",
+        "clinic": "Birchwood Dental Practice",
+        "address": "Birchwood Dental Practice, 8 High Street, Birchwood, G99 3KL"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 7,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-03",
+        "time": "14:30",
+        "clinic": "Lochview Health Centre",
+        "address": "Pier Road, Lochview, PH99 6LM"
+      },
+      "predicted": {
+        "date": "2026-12-03",
+        "time": null,
+        "clinic": "Lochview Health Centre",
+        "address": "half past two in the afternoon, at Lochview Health Centre, Pier Road, Lochview, PH99 6LM"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": false,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 8,
+      "kind": "letter",
+      "expected": {
+        "date": null,
+        "time": null,
+        "clinic": "Elmbank Surgery",
+        "address": "21 Station Road, Elmbank, FK99 8NP"
+      },
+      "predicted": {
+        "date": "2026-12-07",
+        "time": null,
+        "clinic": "Elmbank Surgery",
+        "address": "ou are due a blood pressure check at Elmbank Surgery, 21 Station Road, Elmbank, FK99 8NP"
+      },
+      "warnings": [],
+      "correct": {
+        "date": false,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 9,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-11-16",
+        "time": "16:00",
+        "clinic": "Rosemount Physio",
+        "address": null
+      },
+      "predicted": {
+        "date": "2026-11-16",
+        "time": "16:00",
+        "clinic": "Rosemount Physio",
+        "address": null
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 10,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-08",
+        "time": "08:00",
+        "clinic": "Glenarran Village Hall",
+        "address": "Station Road, Glenarran, PH99 2PQ"
+      },
+      "predicted": {
+        "date": "2026-12-08",
+        "time": "08:00",
+        "clinic": "Glenarran Village Hall",
+        "address": "Station Road, Glenarran, PH99 2PQ"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 11,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-11-26",
+        "time": "11:45",
+        "clinic": "Corrieden Cottage Hospital",
+        "address": "Pier Street, Corrieden, PA99 9QR"
+      },
+      "predicted": {
+        "date": "2026-11-26",
+        "time": "11:45",
+        "clinic": "Physiotherapy Department Corrieden Cottage Hospital",
+        "address": "Physiotherapy Department, Corrieden Cottage Hospital, Pier Street, Corrieden, PA99 9QR"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 12,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-11-18",
+        "time": "16:00",
+        "clinic": "Tarbet Dental Care",
+        "address": "14 Shore Road, Tarbet, G99 1RS"
+      },
+      "predicted": {
+        "date": "2026-11-18",
+        "time": "16:00",
+        "clinic": "Tarbet Dental Care",
+        "address": "Reminder from Tarbet Dental Care, 14 Shore Road, Tarbet, G99 1RS"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 13,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-11-10",
+        "time": "15:00",
+        "clinic": "Dalry Medical Centre",
+        "address": "2 Kirk Brae, Dalry, KA99 4ST"
+      },
+      "predicted": {
+        "date": "2026-11-10",
+        "time": "15:00",
+        "clinic": "Dalry Medical Centre",
+        "address": "your appointment at Dalry Medical Centre, 2 Kirk Brae, Dalry, KA99 4ST"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 14,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-04",
+        "time": "10:00",
+        "clinic": "Fernhill General Hospital",
+        "address": "Hospital Drive, Fernhill, AB99 5UV"
+      },
+      "predicted": {
+        "date": "2026-12-04",
+        "time": "10:00",
+        "clinic": "Fernhill General Hospital",
+        "address": "the Outpatient Building at Fernhill General Hospital, Hospital Drive, Fernhill, AB99 5UV"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 15,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-15",
+        "time": "10:15",
+        "clinic": "Bellmouth Health Centre",
+        "address": "Quay Lane, Bellmouth, EH99 3VW"
+      },
+      "predicted": {
+        "date": "2026-12-15",
+        "time": null,
+        "clinic": "Bellmouth Health Centre",
+        "address": "Bellmouth Health Centre, Quay Lane, Bellmouth, EH99 3VW"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": false,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 16,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-14",
+        "time": "13:10",
+        "clinic": "Mobile Eye Screening Unit",
+        "address": "Co-op car park, Main Road, Kilnair, ML99 2XY"
+      },
+      "predicted": {
+        "date": "2026-12-14",
+        "time": "13:10",
+        "clinic": "The Mobile Eye Screening Unit",
+        "address": "le Eye Screening Unit will be parked in the Co-op car park, Main Road, Kilnair, ML99 2XY"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 17,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-12-03",
+        "time": "09:40",
+        "clinic": "Burnside Surgery",
+        "address": "5 Glebe Road, Burnside, G99 6YZ"
+      },
+      "predicted": {
+        "date": "2026-12-03",
+        "time": "09:40",
+        "clinic": "Burnside Surgery",
+        "address": "Burnside Surgery, 5 Glebe Road, Burnside, G99 6YZ"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 18,
+      "kind": "letter",
+      "expected": {
+        "date": "2026-12-18",
+        "time": "14:15",
+        "clinic": "Muirhead Clinic",
+        "address": "9 Park Terrace, Muirhead, DG99 7AA"
+      },
+      "predicted": {
+        "date": "2026-12-18",
+        "time": "14:15",
+        "clinic": "Muirhead Clinic",
+        "address": "n Friday, 18th December at 2.15pm at Muirhead Clinic, 9 Park Terrace, Muirhead, DG99 7AA"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": true,
+        "address": true
+      }
+    },
+    {
+      "id": 19,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-12-11",
+        "time": "10:05",
+        "clinic": "Millbank Health Centre",
+        "address": "3 Croft Road, Millbank, FK99 1BC"
+      },
+      "predicted": {
+        "date": "2026-12-11",
+        "time": "10:05",
+        "clinic": null,
+        "address": "MILLBANK HEALTH CENTRE, 3 CROFT ROAD, MILLBANK, FK99 1BC"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": false,
+        "address": true
+      }
+    },
+    {
+      "id": 20,
+      "kind": "sms",
+      "expected": {
+        "date": "2026-11-25",
+        "time": "11:00",
+        "clinic": "Mill Road Surgery",
+        "address": "22 Mill Road, Kirkhaven, AB99 2DD"
+      },
+      "predicted": {
+        "date": "2026-11-25",
+        "time": "11:00",
+        "clinic": null,
+        "address": "22 mill road, kirkhaven, ab99 2dd"
+      },
+      "warnings": [],
+      "correct": {
+        "date": true,
+        "time": true,
+        "clinic": false,
+        "address": true
+      }
+    }
+  ]
+}
