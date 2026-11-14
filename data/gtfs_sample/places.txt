@@ -1,0 +1,4 @@
+name,address,stop_id
+Dunmore Community Hospital,"Harbour Road, Dunmore, PA99 1AB",DUN_HOSP
+Glenarran Village Hall,"Station Road, Glenarran, PH99 2PQ",GLN_HALL
+Kilnair Co-op,"Main Road, Kilnair, ML99 2XY",KLN_COOP

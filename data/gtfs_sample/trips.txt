@@ -1,0 +1,15 @@
+route_id,service_id,trip_id,trip_headsign,direction_id
+R42,WEEKDAY,T01_WEE_OUT_0710,Dunmore Community Hospital,0
+R42,WEEKDAY,T02_WEE_OUT_0940,Dunmore Community Hospital,0
+R42,WEEKDAY,T03_WEE_OUT_1215,Dunmore Community Hospital,0
+R42,WEEKDAY,T04_WEE_OUT_1530,Dunmore Community Hospital,0
+R42,WEEKDAY,T05_WEE_OUT_1745,Dunmore Community Hospital,0
+R42,WEEKDAY,T06_WEE_IN_0830,Glenarran,1
+R42,WEEKDAY,T07_WEE_IN_1100,Glenarran,1
+R42,WEEKDAY,T08_WEE_IN_1340,Glenarran,1
+R42,WEEKDAY,T09_WEE_IN_1630,Glenarran,1
+R42,WEEKDAY,T10_WEE_IN_1830,Glenarran,1
+R42,SATURDAY,T11_SAT_OUT_0940,Dunmore Community Hospital,0
+R42,SATURDAY,T12_SAT_OUT_1530,Dunmore Community Hospital,0
+R42,SATURDAY,T13_SAT_IN_1100,Glenarran,1
+R42,SATURDAY,T14_SAT_IN_1630,Glenarran,1

@@ -15,6 +15,7 @@ from pathlib import Path
 from app import config
 from app.extractor_baseline import extract_baseline
 from app.extractor_llm import LLMError, extract_llm
+from app.validation import ground_warnings
 from eval.scoring import FIELDS, score_one, summarise
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,6 +34,7 @@ def run(extractor, prompt, model, data_path):
         except LLMError as exc:
             print(f"sample {s['id']}: {exc}", file=sys.stderr)
             predicted, warnings = {f: None for f in FIELDS}, [str(exc)]
+        warnings = warnings + ground_warnings(predicted, s["text"])  # same check the API uses
         rows.append(
             {
                 "id": s["id"],
@@ -60,8 +62,10 @@ def to_markdown(title, summary, rows):
     for r in wrong:
         for f in FIELDS:
             if not r["correct"][f]:
+                flagged = any(w.startswith(f + " ") for w in r["warnings"])
+                note = " **(flagged for review)**" if flagged else ""
                 lines.append(
-                    f"- #{r['id']} ({r['kind']}) {f}: expected `{r['expected'].get(f)}`, got `{r['predicted'].get(f)}`"
+                    f"- #{r['id']} ({r['kind']}) {f}: expected `{r['expected'].get(f)}`, got `{r['predicted'].get(f)}`{note}"
                 )
     return "\n".join(lines) + "\n"
 

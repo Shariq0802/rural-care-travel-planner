@@ -57,9 +57,23 @@ def test_llm_server_error_raises():
         extract_llm("x", REF, client=_client(status=500))
 
 
+def test_ground_warnings():
+    from app.validation import ground_warnings
+
+    source = "APPT 11 DEC. MILLBANK HEALTH CENTRE, 3 CROFT ROAD, MILLBANK, FK99 1BC."
+    ok = {"clinic": "Millbank Health Centre", "address": "3 Croft Road, Millbank, FK99 1BC"}
+    assert ground_warnings(ok, source) == []
+    bad = {"clinic": "Millbank Health Centre", "address": "3 Croft Road, Millbank, FK9 91BC"}  # mis-copied postcode
+    assert len(ground_warnings(bad, source)) == 1
+    multi = "Pier Street\nCorrieden\nPA99 9QR"
+    assert ground_warnings({"address": "Pier Street, Corrieden, PA99 9QR"}, multi) == []
+    assert ground_warnings({"clinic": None, "address": None}, source) == []
+
+
 def test_prompt_versions():
     assert len(build_messages("t", REF, "v1")) == 2
     assert len(build_messages("t", REF, "v2")) == 2 + 3 * 2
+    assert len(build_messages("t", REF, "v3")) == 2 + 5 * 2
     with pytest.raises(ValueError):
         build_messages("t", REF, "v9")
 

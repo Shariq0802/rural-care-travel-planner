@@ -21,6 +21,22 @@ letter / SMS text ──► POST /extract ──► LLM (Ollama) ──► check
 - **Privacy.** The letter text is never saved. Only the extracted fields are stored.
 - **No guessing.** If a date or time is not exact (for example "in the week of 7 December"), the answer must be `null`.
 
+## Journey planning (Week 2)
+
+The app plans the bus trip to the appointment, and the way home, and replans when a bus is late or cancelled.
+
+| Endpoint | What it does |
+|---|---|
+| `GET /stops` | Bus stops, with a flag for **request stops** (the passenger must signal the driver) |
+| `GET /places?q=` | Match a clinic name (for example from `/extract`) to the nearest bus stop |
+| `POST /plan` | Latest bus that arrives `buffer_minutes` (default 15) before the appointment, earlier buses as safer alternatives, and the bus home |
+| `POST /replan` | Bus late or cancelled: keep it, pick the next bus, or say "late" and suggest community transport |
+
+`/replan` status: `on_time` (late, but still fine), `replanned` (another bus works), `tight` (arrives before the appointment but inside the buffer), `late` (no bus works: community transport and tell the clinic).
+Every response has a short `message` that can be read out loud, and step-by-step `steps` for the journey.
+
+**Timetable data.** `data/gtfs_sample/` is a **made-up** rural route 42 (6 stops, 14 trips, few buses, several request stops) in standard GTFS format, built by `data/build_gtfs_sample.py`. It loads into Postgres on first start, or with `python -m app.load_gtfs <folder>`. Real GTFS data can replace it. Times are local times; a trip after midnight is not handled yet.
+
 ## Run it
 
 ```bash
@@ -42,7 +58,7 @@ curl -s -X POST localhost:8000/extract -H 'content-type: application/json' -d '{
 }'
 ```
 
-Settings (environment variables, see `.env.example`): `OLLAMA_MODEL`, `PROMPT_VERSION` (`v1` or `v2`), `EXTRACTOR` (`llm` or `baseline`).
+Settings (environment variables, see `.env.example`): `OLLAMA_MODEL`, `PROMPT_VERSION` (`v1`, `v2` or `v3`), `EXTRACTOR` (`llm` or `baseline`).
 
 ## Test data
 
@@ -68,7 +84,7 @@ Settings (environment variables, see `.env.example`): `OLLAMA_MODEL`, `PROMPT_VE
 
 ## Results
 
-Run: `python -m eval.evaluate --extractor baseline|llm --prompt v1|v2`
+Run: `python -m eval.evaluate --extractor baseline|llm --prompt v1|v2|v3`
 
 **Baseline (simple regular expressions)** — measured:
 
@@ -82,17 +98,32 @@ Run: `python -m eval.evaluate --extractor baseline|llm --prompt v1|v2`
 
 Baseline fails on: letter date taken instead of appointment date, rescheduled appointments, times in words, and a week-only date.
 
-**LLM (`qwen2.5:7b`)** — _to be filled in after running on a machine with Ollama:_
+**LLM (`qwen2.5:7b`, run locally with Ollama)** — measured on the same 20 messages:
 
 | Prompt | date | time | clinic | address | all 4 right | made-up values |
 |---|---|---|---|---|---|---|
-| v1 (instructions only) | | | | | | |
-| v2 (instructions + 3 examples) | | | | | | |
+| Baseline (regex) | 80% | 85% | 90% | 100% | 12/20 | 1 |
+| v1 (instructions only) | 95% | 100% | 90% | 95% | 16/20 | 1 |
+| v2 (instructions + 3 examples) | 100% | 100% | 90% | 95% | 17/20 | 0 |
+| v3 (v2 + 2 rules + 2 examples) | 100% | 100% | 95% | 100% | 19/20 | 0 |
+
+What v1 and v2 got wrong:
+- **Clinic (#1, #11):** the model gave the department ("Physiotherapy Department") instead of the building ("Corrieden Cottage Hospital").
+- **Address (#19):** the model mis-copied a postcode written in capitals (`FK99 1BC` became `FK9 91BC`).
+- **Made-up date (#8, v1 only):** it invented a date from "in the week of 7 December". Examples in v2 fixed this.
+
+v3 fixed all three v2 mistakes but caused one new one: #9, "Rosemount Physio" was returned as `null` because the new "building, not service" rule made the model treat a physio practice as a service. Net result: 17/20 to 19/20. Tuning further on these same 20 messages would be overfitting, so I stopped here.
+
+v3 adds a rule to give the facility not the department, a rule to copy addresses exactly, and two new examples (not from the test set).
+
+### Safety check: "found in the message?"
+
+After the model answers, the API checks that the clinic and address are written word-for-word in the original message. If not, it adds a warning so the person or carer looks at it again. This catches mis-copied text such as the postcode error above. It does not check dates or times.
 
 ## Limits
 
 - 20 messages is a small test set. It shows the approach works, not that it is ready for real use.
-- The few-shot examples in prompt v2 are not in the test set.
+- The few-shot examples in prompts v2 and v3 are not in the test set. But the v3 rules were written after seeing the v2 mistakes, so the 20 messages are no longer a fully fair test for v3. A fresh set of unseen messages is needed to confirm it.
 - The address check is lenient (containment), so it cannot catch extra words in the address.
 - Tables are created at start-up. Migrations (Alembic) are not set up yet.
 
@@ -104,6 +135,6 @@ python -m pytest -q
 
 The tests use a fake Ollama server, so they run without a model.
 
-## Next (Week 2)
+## Next
 
-Bus timetable data, journey planning to the clinic, and replanning when a bus is late or cancelled.
+Community transport booking, login and roles, GDPR items, simulated live journey alerts ("bus arriving, signal the driver", "your stop is next"), then the Flutter app.

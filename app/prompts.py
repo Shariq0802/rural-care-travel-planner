@@ -71,15 +71,53 @@ def user_message(text, reference_date):
     )
 
 
+# v3 = v2 + two extra rules + two extra examples (still not taken from data/letters.json).
+# Added after v2 mistakes: the model gave the department instead of the hospital,
+# and mis-copied a postcode written in capital letters.
+SYSTEM_V3 = (
+    SYSTEM_V1
+    + """
+- clinic: give the name of the building or facility (hospital, health centre, surgery, village hall), NOT the department or service. If a department and a facility are both named, use the facility. Example: "Cardiology Department, Eastfield Hospital" -> "Eastfield Hospital".
+- address: copy the address exactly, character by character, especially the postcode. Do not change, add or remove any letters or digits."""
+)
+
+_EXAMPLES_V3_EXTRA = [
+    (
+        "2026-10-12",
+        "Dermatology Clinic\nWestbank Infirmary\nLoch Street\nWestbank\nXX7 8WW\n\nYour appointment: Monday 2 November 2026 at 10:20am.",
+        {
+            "date": "2026-11-02",
+            "time": "10:20",
+            "clinic": "Westbank Infirmary",
+            "address": "Loch Street, Westbank, XX7 8WW",
+        },
+    ),
+    (
+        "2026-10-26",
+        "APPT: 6 NOV 3.45PM. EASTFIELD SURGERY, 7 MAIN STREET, EASTFIELD, XX5 6VV. TXT STOP TO OPT OUT",
+        {
+            "date": "2026-11-06",
+            "time": "15:45",
+            "clinic": "Eastfield Surgery",
+            "address": "7 Main Street, Eastfield, XX5 6VV",
+        },
+    ),
+]
+
+
 def build_messages(text, reference_date, version="v1"):
     from datetime import date
 
-    messages = [{"role": "system", "content": SYSTEM_V1}]
-    if version == "v2":
-        for ref, example_text, answer in _EXAMPLES:
-            messages.append({"role": "user", "content": user_message(example_text, date.fromisoformat(ref))})
-            messages.append({"role": "assistant", "content": json.dumps(answer)})
-    elif version != "v1":
+    if version not in ("v1", "v2", "v3"):
         raise ValueError(f"unknown prompt version: {version}")
+    messages = [{"role": "system", "content": SYSTEM_V3 if version == "v3" else SYSTEM_V1}]
+    examples = []
+    if version in ("v2", "v3"):
+        examples += _EXAMPLES
+    if version == "v3":
+        examples += _EXAMPLES_V3_EXTRA
+    for ref, example_text, answer in examples:
+        messages.append({"role": "user", "content": user_message(example_text, date.fromisoformat(ref))})
+        messages.append({"role": "assistant", "content": json.dumps(answer)})
     messages.append({"role": "user", "content": user_message(text, reference_date)})
     return messages

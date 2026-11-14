@@ -1,0 +1,7 @@
+stop_id,stop_name,stop_lat,stop_lon,request_stop
+GLN_HALL,Glenarran Village Hall,56.4,-5.4,1
+GLN_STN,Glenarran Station Road,56.404,-5.39,1
+KLN_COOP,Kilnair Co-op,56.415,-5.37,0
+COR_PIER,Corrieden Pier,56.43,-5.34,1
+FRN_XRD,Fernside Crossroads,56.445,-5.31,1
+DUN_HOSP,Dunmore Community Hospital,56.46,-5.28,0

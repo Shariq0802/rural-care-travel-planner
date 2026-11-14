@@ -20,6 +20,26 @@ def _clean_text(value):
     return text
 
 
+def _words(text):
+    """Lower-case, punctuation and line breaks become single spaces."""
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text.lower())).strip()
+
+
+def ground_warnings(fields, source_text):
+    """Warn when clinic or address is not written word-for-word in the message.
+
+    A model can mis-copy text (for example a postcode: "FK99 1BC" -> "FK9 91BC").
+    Wrong values are then flagged so the person or carer checks them.
+    """
+    source = _words(source_text)
+    warnings = []
+    for name in ("clinic", "address"):
+        value = fields.get(name)
+        if value and _words(value) not in source:
+            warnings.append(f"{name} not found word-for-word in the message; please check it")
+    return warnings
+
+
 def validate_fields(raw):
     """Return (fields, warnings). fields always has the 4 keys."""
     warnings = []
